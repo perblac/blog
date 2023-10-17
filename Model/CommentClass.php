@@ -50,7 +50,4 @@ class Comment{
     {
         $this->deleted = $d;
     }
-
 }
-
-?>
