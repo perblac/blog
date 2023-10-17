@@ -2,7 +2,7 @@
 
 class Article
 {
-    private $id, $title, $text, $dateArt, $author;
+    private $id, $title, $text, $dateArt, $author, $comments;
 
     // constructor
     public function __construct($datos)
@@ -12,6 +12,7 @@ class Article
         $this->text = $datos['text'];
         $this->dateArt = $datos['date'];
         $this->author = UserRepository::getUserById($datos['id_user']);
+        $this->comments = CommentRepository::getCommentsFromArticle($this->id);
     }
 
     // métodos get
@@ -39,6 +40,10 @@ class Article
         return $this->author;
     }
 
+    public function getComments() {
+        return $this->comments;
+    }
+    
     // métodos set
     public function setId($i)
     {

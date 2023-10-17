@@ -9,7 +9,7 @@
 
 <body>
     <?php
-    
+
     echo "<p> Usuario: " . $_SESSION['user']->getName() . "</p><br>";
     echo "<p> Rol: " . $_SESSION['user']->getRol() . "</p><br>";
     echo "<a href='index.php?logout=1'>logout</a>";
@@ -23,20 +23,23 @@
             . $articulo->getDate() . '</td><td>'
             . $articulo->getAuthor()->getName() . "</td><td>"
             . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=0'>comentar</a>" : '') . "</td><tr>";
-        foreach (CommentRepository::getCommentsFromArticle($articulo->getId()) as $comentario) {
-            echo '<tr><td> - </td><td>En ' . $comentario->getDate() . '</td><td>'
-                . UserRepository::getUserById($comentario->getIdUser())->getName() . ' comentó:</td></tr>';
-            echo '<tr><td> - </td><td></td><td colspan=3>' . $comentario->getText() . '</td><td>'
-                . (($_SESSION['user']->getId() == $comentario->getIdUser()) ?
-                    "<a href='index.php?modificar=" . $comentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $comentario->getId() . "'>borrar</a>" : '') . ' '.(($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=".$comentario->getId()."'>comentar</a>" : '').'</td></tr>';
-            foreach (CommentRepository::getCommentsFromArticleAndComments($articulo->getId(),$comentario->getId()) as $subComentario) {
-                echo '<tr><td> - </td><td>En ' . $subComentario->getDate() . '</td><td>'
-                . UserRepository::getUserById($subComentario->getIdUser())->getName() . ' comentó:</td></tr>';
-            echo '<tr><td> - </td><td></td><td colspan=3>' . $subComentario->getText() . '</td><td>'
-                . (($_SESSION['user']->getId() == $subComentario->getIdUser()) ?
-                    "<a href='index.php?modificar=" . $subComentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $subComentario->getId() . "'>borrar</a>" : '') . '</td></tr>';
+        foreach ($articulo->getComments() as $comentario) {
+            if ($comentario->getIdComment() == 0) {
+                echo '<tr><td> - </td><td>En ' . $comentario->getDate() . '</td><td>'
+                    . $comentario->getUser()->getName() . ' comentó:</td></tr>';
+                echo '<tr><td> - </td><td></td><td colspan=3>' . $comentario->getText() . '</td><td>'
+                    . (($_SESSION['user']->getId() == $comentario->getIdUser()) ?
+                        "<a href='index.php?modificar=" . $comentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $comentario->getId() . "'>borrar</a>" : '') . ' ' . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=" . $comentario->getId() . "'>comentar</a>" : '') . '</td></tr>';
+                foreach ($articulo->getComments() as $subcomentario) {
+                    if ($subcomentario->getIdComment() == $comentario->getId()) {
+                        echo '<tr><td> \ </td><td>En ' . $subcomentario->getDate() . '</td><td>'
+                            . $subcomentario->getUser()->getName() . ' respondió:</td></tr>';
+                        echo '<tr><td> \-</td><td></td><td colspan=3>' . $subcomentario->getText() . '</td><td>'
+                            . (($_SESSION['user']->getId() == $subcomentario->getIdUser()) ?
+                                "<a href='index.php?modificar=" . $subcomentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $subComentario->getId() . "'>borrar</a>" : '') . '</td></tr>';
+                    }
+                }
             }
-            
         }
     }
     echo "</table>";
