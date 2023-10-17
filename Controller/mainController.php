@@ -10,6 +10,36 @@ require_once("Model/CommentRepository.php");
 
 session_start();
 
+/*
+if (!isset($_SESSION['user'])) {
+    if (isset($_GET['registro'])) {
+?>
+<form action="index.php" method="POST" style="text-align: center;">
+        <div>
+            <fieldset style="display: inline-block;">
+                <input type="text" name="user" placeholder="Nombre de usuario" required /><br>
+                <input type="password" name="password" placeholder="Contraseña" required /><br>&nbsp;<br>
+                <input type="submit" name="login" value="Entrar" /><br>
+            </fieldset>
+        </div>
+        <a href="index.php?invitado=1">invitado</a>&nbsp;<a href="index.php?registro=1">registrarse</a>
+    </form><br>
+<?php
+    } else {
+        ?>
+<form action="index.php" method="POST" style="text-align: center;">
+    <div><fieldset style="display: inline-block;">
+        <input type="text" name="nombre" placeholder="Nuevo nombre de usuario" required /><br>
+        <input type="text" name="password" placeholder="Elija una contraseña" required /><br>&nbsp;<br>
+        <input type="submit" name="register" value="Registrarse" /><br>
+    </fieldset style="display: inline-block;"></div>
+    <a href="index.php?logout=1">login</a>
+</form><br>
+        <?php
+    }
+}
+*/
+
 if (isset($_GET['logout'])) {
     session_destroy();
     session_start();
@@ -40,9 +70,9 @@ if (isset($_GET['comentar']) && $_SESSION['user']->getRol() > 0) {
         <div>
             <fieldset style="display: inline-block;">
                 <textarea name="text" cols="40" rows="5" placeholder="Su comentario"></textarea><br>
-                <input type="hidden" id="idUser" name="idUser" value="<?php echo $_SESSION['user']->getId(); ?>">
-                <input type="hidden" id="idArticle" name="idArticle" value="<?php echo $_GET['comentar']; ?>">
-                <input type="submit" name="comment" value="Comentar" /><br>
+                <input type="hidden" id="idArticle" name="idArticle" value="<?php echo $_GET['comentar']; ?>" />
+                <input type="hidden" id="subcomentario" name="subcomentario" value="<?php echo $_GET['subC']; ?>" />                
+                <input type="submit" id="comment" name="comment" value="Comentar" /><br>
             </fieldset>
         </div>
     </form>
@@ -54,10 +84,12 @@ if (isset($_POST['comment'])) {
     $com['id'] = null;
     $com['text'] = $_POST['text'];
     $com['id_article'] = $_POST['idArticle'];
-    $com['id_user'] = $_POST['idUser'];
+    $com['id_comment'] = $_POST['subcomentario'];
+    $com['id_user'] = $_SESSION['user']->getId();
     $com['date'] = (new DateTime())->format('Y-m-d H:i:s');
     $com['deleted'] = 0;
     $nuevoComentario = new Comment($com);
+    echo $_POST['idArticle'];
     CommentRepository::addComment($nuevoComentario);
 }
 
@@ -71,7 +103,6 @@ if (isset($_GET['borrar']) && $_SESSION['user']->getRol() > 0) {
 if (isset($_GET['modificar']) && $_SESSION['user']->getRol() > 0) {
     $com = CommentRepository::getCommentById($_GET['modificar']);
     $text = $com->getText();
-    var_dump($text);
 ?>
     <form action="index.php" method="POST">
         <div>
@@ -95,10 +126,11 @@ if (isset($_POST['modify'])) {
 }
 // usar modelos
 
+$articulos = ArticleRepository::getArticles();
 
 // cargar vistas
+// include("View/mainView.phtml");
 if (isset($_SESSION['user'])) {
-    $articulos = ArticleRepository::getArticles();
     $comentarios = CommentRepository::getComments();
     include("View/mainView.phtml");
 } else if (isset($_GET['registro']))

@@ -14,6 +14,7 @@ class CommentRepository {
         }
         return $comentarios;
     }
+
     public static function getCommentsWithDeleted(){
         $bd=Conectar::conexion();
         $q = "SELECT * FROM comments";
@@ -28,6 +29,19 @@ class CommentRepository {
     public static function getCommentsFromArticle($idA){
         $bd=Conectar::conexion();
         $q = "SELECT * FROM comments WHERE id_article = '".$idA."'";
+        $result = $bd->query($q);
+        $comentarios = [];
+        while ($datos = $result->fetch_array()) {
+            if (!$datos['deleted']){
+                $comentarios[] = new Comment($datos);
+            }
+        }
+        return $comentarios;
+    }
+
+    public static function getCommentsFromArticleAndComments($idA, $idC){
+        $bd=Conectar::conexion();
+        $q = "SELECT * FROM comments WHERE id_article = '".$idA."' AND id_comment = '".$idC."'";
         $result = $bd->query($q);
         $comentarios = [];
         while ($datos = $result->fetch_array()) {
@@ -60,7 +74,8 @@ class CommentRepository {
 
     public static function addComment($com) {
         $bd=Conectar::conexion();
-        $q = "INSERT INTO comments VALUES (NULL, '".$com->getText()."', ".$com->getIdArticle().", ".$com->getIdUser().",'".$com->getDate()."' ,".$com->getDeleted()." )";
+        $q = "INSERT INTO comments VALUES (NULL, '".$com->getText()."', ".$com->getIdArticle().", ".$com->getIdComment().", ".$com->getIdUser().",'".$com->getDate()."' ,".$com->getDeleted()." )";
+        echo $q;
         $result = $bd->query($q);
     }
 

@@ -1,13 +1,14 @@
 <?php
 
 class Comment{
-    private $id, $text, $id_article, $id_user, $dateCom, $deleted;
+    private $id, $text, $id_article, $id_comment, $id_user, $dateCom, $deleted;
 
     public function __construct($datos)
     {
         $this->id = $datos['id'];
         $this->text = $datos['text'];
         $this->id_article = $datos['id_article'];
+        $this->id_comment = $datos['id_comment'];
         $this->id_user = $datos['id_user'];
         $this->dateCom = $datos['date'];
         $this->deleted = $datos['deleted'];
@@ -25,6 +26,10 @@ class Comment{
     {
         return $this->id_article;
     }
+    public function getIdComment()
+    {
+        return $this->id_comment;
+    }    
     public function getIdUser()
     {
         return $this->id_user;
