@@ -9,6 +9,36 @@
 
 <body>
     <?php
+    if (isset($_GET['comentar']) && $_SESSION['user']->getRol() > 0) {
+    ?>
+        <form action="index.php" method="POST">
+            <div>
+                <fieldset style="display: inline-block;">
+                    <textarea name="text" cols="40" rows="5" placeholder="Su comentario"></textarea><br>
+                    <input type="hidden" id="idArticle" name="idArticle" value="<?php echo $_GET['comentar']; ?>" />
+                    <input type="hidden" id="subcomentario" name="subcomentario" value="<?php echo $_GET['subC']; ?>" />
+                    <input type="submit" id="comment" name="comment" value="Comentar" /><br>
+                </fieldset>
+            </div>
+        </form>
+    <?php
+    }
+
+    if (isset($_GET['modificar']) && $_SESSION['user']->getRol() > 0) {
+        $com = CommentRepository::getCommentById($_GET['modificar']);
+        $text = $com->getText();
+    ?>
+        <form action="index.php" method="POST">
+            <div>
+                <fieldset style="display: inline-block;">
+                    <textarea name="text" cols="40" rows="5"><?php echo $text; ?></textarea><br>
+                    <input type="hidden" id="idComment" name="idComment" value="<?php echo $com->getId(); ?>">
+                    <input type="submit" name="modify" value="Actualizar" /><br>
+                </fieldset>
+            </div>
+        </form>
+    <?php
+    }
 
     echo "<p> Usuario: " . $_SESSION['user']->getName() . "</p><br>";
     echo "<p> Rol: " . $_SESSION['user']->getRol() . "</p><br>";
@@ -36,7 +66,7 @@
                             . $subcomentario->getUser()->getName() . ' respondió:</td></tr>';
                         echo '<tr><td> \-</td><td></td><td colspan=3>' . $subcomentario->getText() . '</td><td>'
                             . (($_SESSION['user']->getId() == $subcomentario->getIdUser()) ?
-                                "<a href='index.php?modificar=" . $subcomentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $subComentario->getId() . "'>borrar</a>" : '') . '</td></tr>';
+                                "<a href='index.php?modificar=" . $subcomentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $subcomentario->getId() . "'>borrar</a>" : '') . '</td></tr>';
                     }
                 }
             }
