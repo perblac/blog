@@ -14,6 +14,11 @@ class ArticleRepository{
         return $articulos;
     }
 
+    public static function addArticle($art){
+        $bd=Conectar::conexion();
+        $q = "INSERT INTO articles VALUES (NULL, '".$art->getTitle()."', '".$art->getText()."', '".$art->getDate()."', ".$art->getAuthor()->getId().")";
+        $result=$bd->query($q);
+    }
 }
 
 ?>

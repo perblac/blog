@@ -10,6 +10,20 @@ require_once("Model/CommentRepository.php");
 
 session_start();
 
+if (!empty($_GET['c'])) {
+    if ($_GET['c'] == "user") {
+        require("Controller/userController.php");
+    }
+    if ($_GET['c'] == "article") {
+        require("Controller/articleController.php");
+    }
+    if ($_GET['c'] == "comment") {
+        require("Controller/commentController.php");
+    }
+}
+
+
+/*
 if (isset($_GET['logout'])) {
     session_destroy();
     session_start();
@@ -40,7 +54,9 @@ if (isset($_GET['borrar']) && $_SESSION['user']->getRol() > 0) {
         CommentRepository::deleteComment($comentario);
     }
 }
+*/
 
+/*
 if (isset($_POST['comment'])) {
     $com = [];
     $com['id'] = null;
@@ -51,8 +67,8 @@ if (isset($_POST['comment'])) {
     $com['date'] = (new DateTime())->format('Y-m-d H:i:s');
     $com['deleted'] = 0;
     $nuevoComentario = new Comment($com);
-    echo $_POST['idArticle'];
-    CommentRepository::addComment($nuevoComentario);
+    // CommentRepository::addComment($nuevoComentario);
+    $nuevoComentario->save();
 }
 
 if (isset($_POST['modify'])) {
@@ -63,19 +79,24 @@ if (isset($_POST['modify'])) {
         CommentRepository::modifyComment($com);
     }
 }
+*/
 
+function linea($articulo, $comentario)
+{
+    echo '<tr><td> - </td><td>En ' . $comentario->getDate() . '</td><td>'
+        . $comentario->getUser()->getName() . ' comentó:</td></tr>';
+    echo '<tr><td> - </td><td></td><td colspan=3>' . $comentario->getText() . '</td><td>'
+        . (($_SESSION['user']->getId() == $comentario->getIdUser()) ?
+            "<a href='index.php?c=comment&modificar=" . $comentario->getId() .
+            "'>modificar</a>&nbsp;<a href='index.php?c=comment&borrar=" . $comentario->getId() .
+            "'>borrar</a>" : '') . ' ' . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=comment&comentar=" . $articulo->getId() .
+            "&subC=" . $comentario->getId() .
+            "'>comentar</a>" : '') . '</td></tr>';
+}
 // usar modelos
 
 $articulos = ArticleRepository::getArticles();
 
 // cargar vistas
 
-// include("View/mainView.phtml");
-
-if (isset($_SESSION['user'])) {
-    $comentarios = CommentRepository::getComments();
-    include("View/mainView.phtml");
-} else if (isset($_GET['registro']))
-    include("View/registerView.phtml");
-else
-    include("View/loginView.phtml");
+include("View/mainView.phtml");

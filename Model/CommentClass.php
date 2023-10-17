@@ -1,7 +1,7 @@
 <?php
 
 class Comment{
-    private $id, $text, $id_article, $id_comment, $id_user, $dateCom, $deleted, $user;
+    private $id, $text, $id_article, $id_comment, $id_user, $dateCom, $deleted, $user, $responses;
 
     public function __construct($datos)
     {
@@ -13,6 +13,7 @@ class Comment{
         $this->dateCom = $datos['date'];
         $this->deleted = $datos['deleted'];
         $this->user = UserRepository::getUserById($this->id_user);
+        $this->responses = CommentRepository::getCommentsFromArticleAndComments($this->id_article,$this->id);
     }
 
     public function getId()
@@ -47,6 +48,10 @@ class Comment{
     {
         return $this->user;
     }
+    public function getResponses()
+    {
+        return $this->responses;
+    }
 
     public function setText($t)
     {
@@ -59,5 +64,11 @@ class Comment{
     public function setDeleted($d)
     {
         $this->deleted = $d;
+    }
+
+    public function save() {
+        $bd=Conectar::conexion();
+        $q = "INSERT INTO comments VALUES (NULL, '".$this->getText()."', ".$this->getIdArticle().", ".$this->getIdComment().", ".$this->getIdUser().",'".$this->getDate()."' ,".$this->getDeleted()." )";
+        $result = $bd->query($q);
     }
 }

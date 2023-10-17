@@ -9,9 +9,26 @@
 
 <body>
     <?php
+    if (isset($_GET['registro'])) {
+    ?>
+        <form action="index.php?c=user" method="POST" style="text-align: center;">
+            <div>
+                <fieldset style="display: inline-block;">
+                    <input type="text" name="nombre" placeholder="Nuevo nombre de usuario" required /><br>
+                    <input type="text" name="password" placeholder="Elija una contraseña" required /><br>&nbsp;<br>
+                    <input type="submit" name="register" value="Registrarse" /><br>
+                </fieldset style="display: inline-block;">
+            </div>
+            <a href="index.php?c=user">login</a>
+        </form>
+    <?php
+    }
+
+
+
     if (isset($_GET['comentar']) && $_SESSION['user']->getRol() > 0) {
     ?>
-        <form action="index.php" method="POST">
+        <form action="index.php?c=comment" method="POST">
             <div>
                 <fieldset style="display: inline-block;">
                     <textarea name="text" cols="40" rows="5" placeholder="Su comentario"></textarea><br>
@@ -28,7 +45,7 @@
         $com = CommentRepository::getCommentById($_GET['modificar']);
         $text = $com->getText();
     ?>
-        <form action="index.php" method="POST">
+        <form action="index.php?c=comment" method="POST">
             <div>
                 <fieldset style="display: inline-block;">
                     <textarea name="text" cols="40" rows="5"><?php echo $text; ?></textarea><br>
@@ -37,43 +54,63 @@
                 </fieldset>
             </div>
         </form>
-    <?php
+        <?php
     }
 
-    echo "<p> Usuario: " . $_SESSION['user']->getName() . "</p><br>";
-    echo "<p> Rol: " . $_SESSION['user']->getRol() . "</p><br>";
-    echo "<a href='index.php?logout=1'>logout</a>";
+    if (isset($_SESSION['user'])) {
 
 
-    echo "<table><tr><th>Id</th><th>Título</th><th>Texto</th><th>Fecha</th><th>Autor</th><th></th></tr>";
-    foreach ($articulos as $articulo) {
-        echo '<tr><td>' . $articulo->getId() . '</td><td>'
-            . $articulo->getTitle() . '</td><td>'
-            . $articulo->getText() . '</td><td>'
-            . $articulo->getDate() . '</td><td>'
-            . $articulo->getAuthor()->getName() . "</td><td>"
-            . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=0'>comentar</a>" : '') . "</td><tr>";
-        foreach ($articulo->getComments() as $comentario) {
-            if ($comentario->getIdComment() == 0) {
-                echo '<tr><td> - </td><td>En ' . $comentario->getDate() . '</td><td>'
-                    . $comentario->getUser()->getName() . ' comentó:</td></tr>';
-                echo '<tr><td> - </td><td></td><td colspan=3>' . $comentario->getText() . '</td><td>'
-                    . (($_SESSION['user']->getId() == $comentario->getIdUser()) ?
-                        "<a href='index.php?modificar=" . $comentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $comentario->getId() . "'>borrar</a>" : '') . ' ' . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=" . $comentario->getId() . "'>comentar</a>" : '') . '</td></tr>';
-                foreach ($articulo->getComments() as $subcomentario) {
-                    if ($subcomentario->getIdComment() == $comentario->getId()) {
-                        echo '<tr><td> \ </td><td>En ' . $subcomentario->getDate() . '</td><td>'
-                            . $subcomentario->getUser()->getName() . ' respondió:</td></tr>';
-                        echo '<tr><td> \-</td><td></td><td colspan=3>' . $subcomentario->getText() . '</td><td>'
-                            . (($_SESSION['user']->getId() == $subcomentario->getIdUser()) ?
-                                "<a href='index.php?modificar=" . $subcomentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $subcomentario->getId() . "'>borrar</a>" : '') . '</td></tr>';
+        echo "<p> Usuario: " . $_SESSION['user']->getName() . "</p><br>";
+        echo "<p> Rol: " . $_SESSION['user']->getRol() . "</p><br>";
+        if ($_SESSION['user']->getRol() > 1) echo "<a href='index.php?c=article&nuevo=1'>Nuevo artículo</a><br>";
+        echo "<a href='index.php?logout=1&c=user'>logout</a>";
+
+
+        echo "<table><tr><th>Id</th><th>Título</th><th>Texto</th><th>Fecha</th><th>Autor</th><th></th></tr>";
+        foreach ($articulos as $articulo) {
+            echo '<tr><td>' . $articulo->getId() . '</td><td>'
+                . $articulo->getTitle() . '</td><td>'
+                . $articulo->getText() . '</td><td>'
+                . $articulo->getDate() . '</td><td>'
+                . $articulo->getAuthor()->getName() . "</td><td>"
+                . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=comment&comentar=" . $articulo->getId() . "&subC=0'>comentar</a>" : '') . "</td><tr>";
+            foreach ($articulo->getComments() as $comentario) {
+                if ($comentario->getIdComment() == 0) {
+                    linea($articulo, $comentario);
+                    // echo '<tr><td> - </td><td>En ' . $comentario->getDate() . '</td><td>'
+                    //     . $comentario->getUser()->getName() . ' comentó:</td></tr>';
+                    // echo '<tr><td> - </td><td></td><td colspan=3>' . $comentario->getText() . '</td><td>'
+                    //     . (($_SESSION['user']->getId() == $comentario->getIdUser()) ?
+                    //         "<a href='index.php?modificar=" . $comentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $comentario->getId() . "'>borrar</a>" : '') . ' ' . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=" . $comentario->getId() . "'>comentar</a>" : '') . '</td></tr>';
+                    foreach ($comentario->getResponses() as $subcomentario) {
+                        // echo '<tr><td> \ </td><td>En ' . $subcomentario->getDate() . '</td><td>'
+                        //     . $subcomentario->getUser()->getName() . ' respondió:</td></tr>';
+                        // echo '<tr><td> \-</td><td></td><td colspan=3>' . $subcomentario->getText() . '</td><td>'
+                        //     . (($_SESSION['user']->getId() == $subcomentario->getIdUser()) ?
+                        //         "<a href='index.php?modificar=" . $subcomentario->getId() . "'>modificar</a>&nbsp;<a href='index.php?borrar=" . $subcomentario->getId() . "'>borrar</a>" : '') . ' '. (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?comentar=" . $articulo->getId() . "&subC=" . $subcomentario->getId() . "'>comentar</a>" : '') . '</td></tr>';
+                        linea($articulo, $subcomentario);
                     }
                 }
             }
         }
-    }
-    echo "</table>";
+        echo "</table>";
+    } else {
+        if (!isset($_GET['registro'])) {
+        ?>
+            <form action="index.php?c=user" method="POST" style="text-align: center;">
+                <div>
+                    <fieldset style="display: inline-block;">
+                        <input type="text" name="user" placeholder="Nombre de usuario" required /><br>
+                        <input type="password" name="password" placeholder="Contraseña" required /><br>&nbsp;<br>
+                        <input type="submit" name="login" value="Entrar" /><br>
+                    </fieldset>
+                </div>
+                <a href="index.php?invitado=1&c=user">invitado</a>&nbsp;<a href="index.php?registro=1&c=user">registrarse</a>
+            </form>
+    <?php
 
+        }
+    }
     ?>
 </body>
 

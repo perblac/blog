@@ -75,7 +75,6 @@ class CommentRepository {
     public static function addComment($com) {
         $bd=Conectar::conexion();
         $q = "INSERT INTO comments VALUES (NULL, '".$com->getText()."', ".$com->getIdArticle().", ".$com->getIdComment().", ".$com->getIdUser().",'".$com->getDate()."' ,".$com->getDeleted()." )";
-        echo $q;
         $result = $bd->query($q);
     }
 

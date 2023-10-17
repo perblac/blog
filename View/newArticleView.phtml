@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear nuevo artículo</title>
+</head>
+
+<body>
+    <form action="index.php?c=article" method="POST">
+        <div>
+            <fieldset style="display: inline-block;">
+                <textarea name="text" cols="40" rows="5" placeholder="Su artículo"></textarea><br>
+                <input type="text" name="title" placeholder="Título del artículo" /><br>
+                <input type="hidden" name="idUser" value="<?php echo $_SESSION['user']->getId();?>">
+                <input type="submit" name="newArticle" value="Publicar" /><br>
+            </fieldset>
+        </div>
+    </form>
+</body>
+
+</html>
