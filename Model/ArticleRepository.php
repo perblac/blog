@@ -1,6 +1,6 @@
 <?php
 
-// métodos para trabajar con los artículos
+/* ----------------- métodos para trabajar con los artículos ---------------- */
 class ArticleRepository{
 
     public static function getArticles(){

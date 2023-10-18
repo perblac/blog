@@ -29,10 +29,3 @@ if (!empty($_POST['register'])) {
         echo '<script>alert("Nombre de usuario ya existe");</script>';
     } else UserRepository::registerUser($_POST['nombre'], $_POST['password']);
 }
-
-if (isset($_GET['borrar']) && $_SESSION['user']->getRol() > 0) {
-    $comentario = CommentRepository::getCommentById($_GET['borrar']);
-    if ($comentario->getIdUser() == $_SESSION['user']->getId()) {
-        CommentRepository::deleteComment($comentario);
-    }
-}

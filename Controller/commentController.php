@@ -13,7 +13,6 @@ if (isset($_POST['comment'])) {
     $com['date'] = (new DateTime())->format('Y-m-d H:i:s');
     $com['deleted'] = 0;
     $nuevoComentario = new Comment($com);
-    // CommentRepository::addComment($nuevoComentario);
     $nuevoComentario->save();
 }
 
@@ -23,6 +22,13 @@ if (isset($_POST['modify'])) {
     $com->setDate((new DateTime())->format('Y-m-d H:i:s'));
     if ($com->getIdUser() == $_SESSION['user']->getId()) {
         CommentRepository::modifyComment($com);
+    }
+}
+
+if (isset($_GET['borrar']) && $_SESSION['user']->getRol() > 0) {
+    $comentario = CommentRepository::getCommentById($_GET['borrar']);
+    if ($comentario->getIdUser() == $_SESSION['user']->getId()) {
+        CommentRepository::deleteComment($comentario);
     }
 }
 

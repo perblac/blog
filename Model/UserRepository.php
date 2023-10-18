@@ -1,7 +1,6 @@
 <?php
 
-use PSpell\Config;
-
+/* ------------------- métodos para trabajar con usuarios ------------------- */
 class UserRepository{
     public static function checkLogin($n,$pass) {
         
