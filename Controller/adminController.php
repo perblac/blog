@@ -12,9 +12,7 @@ if (isset($_GET['cambiarRoles']) && $_SESSION['user']->getRol() > 1) {
 
 if (isset($_POST['newRol'])) {
     UserRepository::setUserRol($_POST['idUser'], $_POST['newRol']);
-    $users = UserRepository::getUsersExceptMe();
-    include("View/roleChangeView.phtml");
-    die;
+    header('location: index.php?c=admin&cambiarRoles=1');
 }
-var_dump($_POST);
+
 ?>

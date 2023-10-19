@@ -17,7 +17,7 @@
         <div id="listaUsuarios">
             <?php
                 foreach($users as $user) {
-                    echo 'Usuario: '.$user->getName();
+                    echo 'Usuario: '.$user->getName(). ' - Rol actual:'.$user->getRol();
                     ?>
                         <!-- <form action="index.php?c=user" method="POST" style="display:inline">
                             <input type="number" name="nuevoRol" max="2" min="0" value="<?php //echo $user->getRol();?>"/>

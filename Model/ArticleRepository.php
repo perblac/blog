@@ -19,6 +19,17 @@ class ArticleRepository{
         $q = "INSERT INTO articles VALUES (NULL, '".$art->getTitle()."', '".$art->getText()."', '".$art->getDate()."', ".$art->getAuthor()->getId().")";
         $result=$bd->query($q);
     }
+
+    public static function searchArticles($query){
+        $bd=Conectar::conexion();
+        $q = "SELECT * FROM articles WHERE text LIKE '%".$query."%' OR title LIKE '%".$query."%' ";
+        $articulos = [];
+        $result = $bd->query($q);
+        while($datos=$result->fetch_assoc()) {
+            $articulos[] = new Article($datos);
+        }
+        return $articulos;
+    }
 }
 
 ?>

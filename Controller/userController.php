@@ -27,5 +27,7 @@ if (isset($_GET['invitado'])) {
 if (!empty($_POST['register'])) {
     if (UserRepository::checkUserExist($_POST['nombre'])) {
         echo '<script>alert("Nombre de usuario ya existe");</script>';
-    } else UserRepository::registerUser($_POST['nombre'], $_POST['password']);
+    } else {
+        UserRepository::registerUser($_POST['nombre'], $_POST['password']);
+    }
 }

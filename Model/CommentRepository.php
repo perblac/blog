@@ -111,13 +111,13 @@ class CommentRepository
     public static function imprimeComentarios($idArticulo, $comments, $nivel = 0)
     {
         foreach ($comments as $comentario) {
-            echo '<tr><td>*' . str_repeat("*", $nivel) . '</td>';
+            echo '<tr><td>&nbsp;</td>';
             echo '<td style="font-size:.7em">En ' . $comentario->getDate() . '</td><td>'
-                . str_repeat("&nbsp;&nbsp;", $nivel) . ''
+                . str_repeat("&nbsp;|&nbsp;", $nivel) . ''
                 . $comentario->getUser()->getName() . ' comentó:</td></tr>';
-            echo '<tr><td>*' . str_repeat("*", $nivel) . '</td><td></td>';
+            echo '<tr><td>&nbsp;</td><td></td>';
             echo '<td colspan=3>'
-                . str_repeat("&nbsp;&nbsp;", $nivel) . ''
+                . str_repeat("&nbsp;|&nbsp;", $nivel) . ''
                 . $comentario->getText() . '</td><td>'
                 . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=comment&comentar=" . $idArticulo .
                     "&subC=" . $comentario->getId() .

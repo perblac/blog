@@ -9,10 +9,17 @@ if (isset($_GET['nuevo']) && isset($_SESSION['user']) && $_SESSION['user']->getR
 
 if (isset($_POST['newArticle'])) {
     $datos['id'] = NULL;
-    $datos['title'] =($_POST['title'])?$_POST['title']:'<sin título>';
+    $datos['title'] = ($_POST['title']) ? $_POST['title'] : '<sin título>';
     $datos['text'] = $_POST['text'];
     $datos['date'] = (new DateTime())->format('Y-m-d H:i:s');
     $datos['id_user'] = $_POST['idUser'];
     $articulo = new Article($datos);
     ArticleRepository::addArticle($articulo);
+}
+
+if (isset($_POST['query'])) {
+
+    $articulos = ArticleRepository::searchArticles($_POST['query']);
+    include("View/mainView.phtml");
+    die;
 }
