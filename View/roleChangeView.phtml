@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Cambiar roles a los usuarios</title>
+</head>
+
+<body>
+    <div class="container">
+    <a href="index.php" width="25"><img src="logo.ico"  class="bg-primary" alt="" width=25/></a>
+        <div class="text-white text-center bg-primary py-3 mb-3">
+            <h1>Cambiar roles</h1>
+        </div>
+        <div id="listaUsuarios">
+            <?php
+                foreach($users as $user) {
+                    echo 'Usuario: '.$user->getName();
+                    ?>
+                        <!-- <form action="index.php?c=user" method="POST" style="display:inline">
+                            <input type="number" name="nuevoRol" max="2" min="0" value="<?php //echo $user->getRol();?>"/>
+                            <input type="hidden" name="idUser" value="<?php //echo $user->getId();?>">
+                            <input type="submit" name="newRol" value="Cambiar"/>
+                        </form><br> -->
+                        <form action="index.php?c=admin" method="POST" style="display:inline">
+                            <select name="newRol">
+                                <option value=0 <?php echo ($user->getRol()==0)?'SELECTED':''?>>Baneado</option>
+                                <option value=1 <?php echo ($user->getRol()==1)?'SELECTED':''?>>Registrado</option>
+                                <option value=2 <?php echo ($user->getRol()==2)?'SELECTED':''?>>Admin</option>
+                            </select>
+                            <input type="hidden" name="idUser" value="<?php echo $user->getId();?>">
+                            <input type="submit" value="Cambiar"/>
+                        </form><br>
+                    <?php
+                }
+            ?>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+
+</html>

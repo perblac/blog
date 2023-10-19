@@ -11,6 +11,8 @@ require_once("Model/CommentRepository.php");
 session_start();
 
 if (!empty($_GET['c'])) {
+    require("Controller/".$_GET['c']."Controller.php");
+    /*
     if ($_GET['c'] == "user") {
         require("Controller/userController.php");
     }
@@ -19,7 +21,8 @@ if (!empty($_GET['c'])) {
     }
     if ($_GET['c'] == "comment") {
         require("Controller/commentController.php");
-    }
+    }*/
+
 }
 
 // usar modelos
@@ -27,5 +30,4 @@ if (!empty($_GET['c'])) {
 $articulos = ArticleRepository::getArticles();
 
 // cargar vistas
-
 include("View/mainView.phtml");

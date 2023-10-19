@@ -8,6 +8,7 @@
 </head>
 
 <body>
+<a href="index.php" width="25"><img src="logo.ico" alt="" width=50/></a>
     <?php
     if (isset($_GET['registro'])) {
     ?>
@@ -28,13 +29,14 @@
 
     if (isset($_GET['comentar']) && $_SESSION['user']->getRol() > 0) {
     ?>
-        <form action="index.php?c=comment" method="POST">
+        <form action="index.php?c=comment" method="POST" class="form-control">
             <div>
                 <fieldset style="display: inline-block;">
                     <textarea name="text" cols="40" rows="5" placeholder="Su comentario"></textarea><br>
                     <input type="hidden" id="idArticle" name="idArticle" value="<?php echo $_GET['comentar']; ?>" />
                     <input type="hidden" id="subcomentario" name="subcomentario" value="<?php echo $_GET['subC']; ?>" />
-                    <input type="submit" id="comment" name="comment" value="Comentar" /><br>
+                    <input type="submit" id="comment" name="comment" value="Comentar" />
+                    <button class="btn" onclick="href.location='index.php'">Cancelar</button><br>
                 </fieldset>
             </div>
         </form>
@@ -62,7 +64,7 @@
 
         echo "<p> Usuario: " . $_SESSION['user']->getName() . "</p><br>";
         echo "<p> Rol: " . $_SESSION['user']->getRol() . "</p><br>";
-        if ($_SESSION['user']->getRol() > 1) echo "<a href='index.php?c=article&nuevo=1'>Nuevo artículo</a><br>";
+        if ($_SESSION['user']->getRol() > 1) echo "<a href='index.php?c=admin&panelDeControl=1'>Panel de Control</a><br>";
         echo "<a href='index.php?logout=1&c=user'>logout</a>";
 
 
@@ -70,11 +72,11 @@
 
         foreach ($articulos as $articulo) {
             echo '<tr><td>' . $articulo->getId() . '</td><td>'
-                . $articulo->getTitle() . '</td><td>'
+                . $articulo->getTitle() . '</td><td style="font-size:1.2em;background-color:lightgray;">'
                 . $articulo->getText() . '</td><td>'
                 . $articulo->getDate() . '</td><td>'
                 . $articulo->getAuthor()->getName() . "</td><td>"
-                . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=comment&comentar=" . $articulo->getId() . "&subC=0'>comentar</a>" : '') . "</td><tr>";
+                . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=user&comentar=" . $articulo->getId() . "&subC=0'>comentar</a>" : '') . "</td><tr>";
                 foreach($articulo->getComments() as $comment){
                     if ($comment->getIdComment() == 0) {
                         CommentRepository::imprimeComentarios($articulo->getId(), [$comment]);
