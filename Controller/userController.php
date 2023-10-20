@@ -29,5 +29,6 @@ if (!empty($_POST['register'])) {
         echo '<script>alert("Nombre de usuario ya existe");</script>';
     } else {
         UserRepository::registerUser($_POST['nombre'], $_POST['password']);
+        $_SESSION['user'] = UserRepository::checkLogin($_POST['nombre'], $_POST['password']);
     }
 }

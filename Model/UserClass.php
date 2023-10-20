@@ -10,6 +10,7 @@ class User
         $this->rol = $datos['rol'];
     }
 
+    // getters
     public function getId()
     {
         return $this->id;
@@ -22,6 +23,8 @@ class User
     {
         return $this->rol;
     }
+
+    // setters
     public function setId($i)
     {
         $this->id = $i;

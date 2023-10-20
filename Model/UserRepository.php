@@ -1,9 +1,6 @@
 <?php
 
 /* ------------------- métodos para trabajar con usuarios ------------------- */
-
-use PSpell\Config;
-
 class UserRepository{
     public static function checkLogin($n,$pass) {
         
@@ -53,7 +50,6 @@ class UserRepository{
         }
         return $users;
     }
-
     
     public static function getUsersExceptMe() {
         $bd=Conectar::conexion();

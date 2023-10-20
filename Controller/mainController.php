@@ -11,18 +11,8 @@ require_once("Model/CommentRepository.php");
 session_start();
 
 if (!empty($_GET['c'])) {
+    //TODO: controlar que 'c' es válido
     require("Controller/".$_GET['c']."Controller.php");
-    /*
-    if ($_GET['c'] == "user") {
-        require("Controller/userController.php");
-    }
-    if ($_GET['c'] == "article") {
-        require("Controller/articleController.php");
-    }
-    if ($_GET['c'] == "comment") {
-        require("Controller/commentController.php");
-    }*/
-
 }
 
 // usar modelos

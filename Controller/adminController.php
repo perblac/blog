@@ -1,4 +1,7 @@
 <?php
+/* -------------------------------------------------------------------------- */
+/*                          control del administrador                         */
+/* -------------------------------------------------------------------------- */
 if (isset($_GET['panelDeControl']) && $_SESSION['user']->getRol() > 1) {
     include("View/adminView.phtml");
     die;

@@ -16,6 +16,7 @@ class Comment{
         $this->responses = CommentRepository::getCommentsFromArticleAndComments($this->id_article,$this->id);
     }
 
+    // getters
     public function getId()
     {
         return $this->id;
@@ -53,6 +54,7 @@ class Comment{
         return $this->responses;
     }
 
+    // setters
     public function setText($t)
     {
         $this->text = $t;
@@ -66,6 +68,7 @@ class Comment{
         $this->deleted = $d;
     }
 
+    // metodo para crear comentario en la BBDD
     public function save() {
         $bd=Conectar::conexion();
         $q = "INSERT INTO comments VALUES (NULL, '".$this->getText()."', ".$this->getIdArticle().", ".$this->getIdComment().", ".$this->getIdUser().",'".$this->getDate()."' ,".$this->getDeleted()." )";
