@@ -64,13 +64,23 @@
 
         if (isset($_SESSION['user'])) {
         ?>
-            <form action="index.php?c=article" method=POST>
-                <input type="search" name="query" />
+            <form action="index.php" method=GET>
+                <input type="search" name="query" placeholder="Busca algo..." value="<?php echo (isset($_GET['query'])) ? $_GET['query'] : ''; ?>" />
                 <input type="submit" value="Buscar" />
                 <label for="ordenAlfa">
-                    <input type="checkbox" name="ordenAlfa" value="1">Ordenar alfabeticamente</label>
+                    <input type="checkbox" name="ordenAlfa" value="1" <?php echo (isset($_GET['ordenAlfa'])) ? 'checked' : ''; ?>>Ordenar alfabeticamente</label>
                 <label for="ordenFecha">
-                    <input type="checkbox" name="ordenFecha" value="2">Ordenar por fecha</label>
+                    <input type="checkbox" name="ordenFecha" value="2" <?php echo (isset($_GET['ordenFecha'])) ? 'checked' : ''; ?>>Ordenar por fecha</label>
+                <label for="asc">
+                    <input type="radio" id="asc" name="sortOrder" value="asc" <?php
+                                                                                echo (isset($_GET['sortOrder']) && $_GET['sortOrder'] == 'asc') ? 'checked' : '';
+                                                                                ?>>Ascendente</label>
+                <label for="des">
+                    <input type="radio" id="asc" name="sortOrder" value="desc" <?php
+                                                                                echo (!isset($_GET['sortOrder']) || $_GET['sortOrder'] == 'desc') ? 'checked' : '';
+                                                                                ?>>Descendente</label>
+                <input type="hidden" name="c" value="article">
+                <input type="hidden" name="pagina" value="1">
             </form>
             <?php
 
@@ -94,6 +104,11 @@
                 }
             }
             echo "</table>";
+
+            if (isset($numArticulos)) {
+             echo ViewRepository::getMenuPagination($_GET,$numArticulos);
+            }
+            
         } else {
             if (!isset($_GET['registro'])) {
             ?>

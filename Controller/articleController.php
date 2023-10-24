@@ -17,9 +17,10 @@ if (isset($_POST['newArticle'])) {
     ArticleRepository::addArticle($articulo);
 }
 
-if (isset($_POST['query'])) {
-    $opcion = isset($_POST['ordenAlfa']) * 2 + isset($_POST['ordenFecha']);
-    $articulos = ArticleRepository::searchArticles($_POST['query'], $opcion);
+if (isset($_GET['query'])) {
+    $opcion = isset($_GET['ordenAlfa']) * 2 + isset($_GET['ordenFecha']);
+    $articulos = ArticleRepository::searchArticles($_GET['query'], $opcion, $_GET['sortOrder'], $_GET['pagina']);
+    $numArticulos = ArticleRepository::numSearchArticles($_GET['query']);
     include("View/mainView.phtml");
     die;
 }
