@@ -20,9 +20,10 @@ class ArticleRepository{
         $result=$bd->query($q);
     }
 
-    public static function searchArticles($query){
+    public static function searchArticles($query, $order){
         $bd=Conectar::conexion();
         $q = "SELECT * FROM articles WHERE text LIKE '%".$query."%' OR title LIKE '%".$query."%' ";
+        $q .= ($order == 3)?' ORDER BY title, date ':(($order == 2)?' ORDER BY title ':(($order == 1)?' ORDER BY date ':''));
         $articulos = [];
         $result = $bd->query($q);
         while($datos=$result->fetch_assoc()) {
@@ -31,5 +32,3 @@ class ArticleRepository{
         return $articulos;
     }
 }
-
-?>

@@ -18,8 +18,8 @@ if (isset($_POST['newArticle'])) {
 }
 
 if (isset($_POST['query'])) {
-
-    $articulos = ArticleRepository::searchArticles($_POST['query']);
+    $opcion = isset($_POST['ordenAlfa']) * 2 + isset($_POST['ordenFecha']);
+    $articulos = ArticleRepository::searchArticles($_POST['query'], $opcion);
     include("View/mainView.phtml");
     die;
 }
