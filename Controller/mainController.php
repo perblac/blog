@@ -1,4 +1,7 @@
 <?php
+/* -------------------------------------------------------------------------- */
+/*                              control principal                             */
+/* -------------------------------------------------------------------------- */
 
 // cargar modelos
 require_once("Model/ArticleClass.php");
@@ -17,7 +20,6 @@ if (!empty($_GET['c'])) {
 }
 
 // usar modelos
-
 $articulos = ArticleRepository::getArticles();
 
 // cargar vistas

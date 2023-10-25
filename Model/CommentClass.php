@@ -1,8 +1,10 @@
 <?php
 
-class Comment{
+class Comment
+{
     private $id, $text, $id_article, $id_comment, $id_user, $dateCom, $deleted, $user, $responses;
 
+    // constructor
     public function __construct($datos)
     {
         $this->id = $datos['id'];
@@ -13,7 +15,7 @@ class Comment{
         $this->dateCom = $datos['date'];
         $this->deleted = $datos['deleted'];
         $this->user = UserRepository::getUserById($this->id_user);
-        $this->responses = CommentRepository::getCommentsFromArticleAndComments($this->id_article,$this->id);
+        $this->responses = CommentRepository::getCommentsFromArticleAndComments($this->id_article, $this->id);
     }
 
     // getters
@@ -32,7 +34,7 @@ class Comment{
     public function getIdComment()
     {
         return $this->id_comment;
-    }    
+    }
     public function getIdUser()
     {
         return $this->id_user;
@@ -68,10 +70,11 @@ class Comment{
         $this->deleted = $d;
     }
 
-    // metodo para crear comentario en la BBDD
-    public function save() {
-        $bd=Conectar::conexion();
-        $q = "INSERT INTO comments VALUES (NULL, '".$this->getText()."', ".$this->getIdArticle().", ".$this->getIdComment().", ".$this->getIdUser().",'".$this->getDate()."' ,".$this->getDeleted()." )";
+    // método para crear comentario en la BBDD
+    public function save()
+    {
+        $bd = Conectar::conexion();
+        $q = "INSERT INTO comments VALUES (NULL, '" . $this->getText() . "', " . $this->getIdArticle() . ", " . $this->getIdComment() . ", " . $this->getIdUser() . ",'" . $this->getDate() . "' ," . $this->getDeleted() . " )";
         $result = $bd->query($q);
     }
 }

@@ -24,11 +24,23 @@ if (isset($_GET['invitado'])) {
     $_SESSION['user'] = new User($datos);
 }
 
-if (!empty($_POST['register'])) {
+if (isset($_POST['register'])) {
     if (UserRepository::checkUserExist($_POST['nombre'])) {
-        echo '<script>alert("Nombre de usuario ya existe");</script>';
+        echo '<script>alert("El nombre de usuario \"'.$_POST['nombre'].'\"  ya existe");</script>';
     } else {
         UserRepository::registerUser($_POST['nombre'], $_POST['password']);
         $_SESSION['user'] = UserRepository::checkLogin($_POST['nombre'], $_POST['password']);
+        unset($_GET['registroFrm']);
+        header('location: index.php');
     }
+}
+
+if (!isset($_SESSION['user']) && !isset($_GET['registroFrm'])) {
+    include('View/loginView.phtml');
+    die;
+}
+
+if (isset($_GET['registroFrm'])) {
+    include('View/registerView.phtml');
+    die;
 }

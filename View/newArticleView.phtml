@@ -20,7 +20,7 @@
                     <fieldset style="display: inline-block;">
                         <input type="text" name="title" placeholder="Título del artículo" /><br>
                         <textarea name="text" cols="40" rows="5" placeholder="Su artículo"></textarea><br>
-                        <input type="hidden" name="idUser" value="<?php echo $_SESSION['user']->getId(); ?>">
+                        <input type="hidden" name="idUser" <?php echo 'value="'.$_SESSION['user']->getId().'"'; ?>>
                         <input type="submit" name="newArticle" value="Publicar" /><br>
                     </fieldset>
                 </div>

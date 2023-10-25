@@ -15,29 +15,16 @@
             <h1 style="display:inline">Blog</h1>
         </div>
         <?php
-        if (isset($_GET['registro'])) {
-        ?>
-            <form action="index.php?c=user" method="POST" style="text-align: center;">
-                <div>
-                    <fieldset style="display: inline-block;">
-                        <input type="text" class="form-control my-2" name="nombre" placeholder="Nuevo nombre de usuario" required /><br>
-                        <input type="text" class="form-control my-2" name="password" placeholder="Elija una contraseña" required /><br>&nbsp;<br>
-                        <input type="submit" class="form-control bg-primary text-white" name="register" value="Registrarse" /><br>
-                    </fieldset style="display: inline-block;">
-                </div>
-                <a href="index.php?c=user">login</a>
-            </form>
-        <?php
-        }
 
         if (isset($_GET['comentar']) && $_SESSION['user']->getRol() > 0) {
+        /* -------------------- formulario para hacer comentarios ------------------- */
         ?>
             <form action="index.php?c=comment" method="POST" class="form-control">
                 <div>
                     <fieldset style="display: inline-block;">
                         <textarea name="text" cols="40" rows="5" placeholder="Su comentario"></textarea><br>
-                        <input type="hidden" id="idArticle" name="idArticle" value="<?php echo $_GET['comentar']; ?>" />
-                        <input type="hidden" id="subcomentario" name="subcomentario" value="<?php echo $_GET['subC']; ?>" />
+                        <input type="hidden" id="idArticle" name="idArticle" <?php echo 'value="' . $_GET['comentar'] . '"'; ?> />
+                        <input type="hidden" id="subcomentario" name="subcomentario" <?php echo 'value="' . $_GET['subC'] . '"'; ?> />
                         <input type="submit" id="comment" name="comment" value="Comentar" />
                         <button class="btn" onclick="href.location='index.php'">Cancelar</button><br>
                     </fieldset>
@@ -47,6 +34,7 @@
         }
 
         if (isset($_GET['modificar']) && $_SESSION['user']->getRol() > 0) {
+        /* ------------------ formulario para modificar comentarios ----------------- */
             $com = CommentRepository::getCommentById($_GET['modificar']);
             $text = $com->getText();
         ?>
@@ -54,7 +42,7 @@
                 <div>
                     <fieldset style="display: inline-block;">
                         <textarea name="text" cols="40" rows="5"><?php echo $text; ?></textarea><br>
-                        <input type="hidden" id="idComment" name="idComment" value="<?php echo $com->getId(); ?>">
+                        <input type="hidden" id="idComment" name="idComment" <?php echo 'value="' . $com->getId(); ?>">
                         <input type="submit" name="modify" value="Actualizar" /><br>
                     </fieldset>
                 </div>
@@ -63,9 +51,10 @@
         }
 
         if (isset($_SESSION['user'])) {
+        /* -------------------------------- Buscador -------------------------------- */
         ?>
             <form action="index.php" method=GET>
-                <input type="search" name="query" placeholder="Busca algo..." value="<?php echo (isset($_GET['query'])) ? $_GET['query'] : ''; ?>" />
+                <input type="search" name="query" placeholder="Busca algo..." <?php echo 'value="'.(isset($_GET['query']) ? $_GET['query'] : '').'"'; ?> />
                 <input type="submit" value="Buscar" />
                 <label for="ordenAlfa">
                     <input type="checkbox" name="ordenAlfa" value="1" <?php echo (isset($_GET['ordenAlfa'])) ? 'checked' : ''; ?>>Ordenar alfabeticamente</label>
@@ -73,57 +62,30 @@
                     <input type="checkbox" name="ordenFecha" value="2" <?php echo (isset($_GET['ordenFecha'])) ? 'checked' : ''; ?>>Ordenar por fecha</label>
                 <label for="asc">
                     <input type="radio" id="asc" name="sortOrder" value="asc" <?php
-                                                                                echo (isset($_GET['sortOrder']) && $_GET['sortOrder'] == 'asc') ? 'checked' : '';
+                                                                                echo (!isset($_GET['sortOrder']) || $_GET['sortOrder'] == 'asc') ? 'checked' : '';
                                                                                 ?>>Ascendente</label>
                 <label for="des">
                     <input type="radio" id="asc" name="sortOrder" value="desc" <?php
-                                                                                echo (!isset($_GET['sortOrder']) || $_GET['sortOrder'] == 'desc') ? 'checked' : '';
+                                                                                echo (isset($_GET['sortOrder']) && $_GET['sortOrder'] == 'desc') ? 'checked' : '';
                                                                                 ?>>Descendente</label>
                 <input type="hidden" name="c" value="article">
                 <input type="hidden" name="pagina" value="1">
             </form>
             <?php
+        /* -------------------------------- User info ------------------------------- */
+            echo ViewRepository::printUserInfo();
 
-            echo "<p> Usuario: " . $_SESSION['user']->getName();
-            echo " - Rol: " . $_SESSION['user']->getRol() . "</p><br>";
-            if ($_SESSION['user']->getRol() > 1) echo "<a href='index.php?c=admin&panelDeControl=1'>Panel de Control</a><br>";
-            echo "<a href='index.php?logout=1&c=user'>logout</a>";
-
-            echo "<table><tr><th>Id</th><th>Título</th><th>Texto</th><th>Fecha</th><th>Autor</th><th></th></tr>";
-            foreach ($articulos as $articulo) {
-                echo '<tr><td>' . $articulo->getId() . '</td><td>'
-                    . $articulo->getTitle() . '</td><td style="font-size:1.2em;background-color:lightgray;">'
-                    . $articulo->getText() . '</td><td>'
-                    . $articulo->getDate() . '</td><td>'
-                    . $articulo->getAuthor()->getName() . "</td><td>"
-                    . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=user&comentar=" . $articulo->getId() . "&subC=0'>comentar</a>" : '') . "</td><tr>";
-                foreach ($articulo->getComments() as $comment) {
-                    if ($comment->getIdComment() == 0) {
-                        CommentRepository::imprimeComentarios($articulo->getId(), [$comment]);
-                    }
-                }
+        /* -------------------------------- Artículos ------------------------------- */
+            if (isset($numArticulos)) {
+                echo ViewRepository::getMenuPagination($_GET, $numArticulos);
             }
-            echo "</table>";
+
+            echo ViewRepository::printArticles($articulos);
 
             if (isset($numArticulos)) {
-             echo ViewRepository::getMenuPagination($_GET,$numArticulos);
+                echo ViewRepository::getMenuPagination($_GET, $numArticulos);
             }
-            
-        } else {
-            if (!isset($_GET['registro'])) {
-            ?>
-                <form action="index.php?c=user" method="POST" style="text-align: center;">
-                    <div>
-                        <fieldset style="display: inline-block;">
-                            <input type="text" name="user" placeholder="Nombre de usuario" required /><br>
-                            <input type="password" name="password" placeholder="Contraseña" required /><br>&nbsp;<br>
-                            <input type="submit" name="login" value="Entrar" /><br>
-                        </fieldset>
-                    </div>
-                    <a href="index.php?invitado=1&c=user">invitado</a>&nbsp;<a href="index.php?registro=1&c=user">registrarse</a>
-                </form>
-        <?php
-            }
+
         }
         ?>
     </div>

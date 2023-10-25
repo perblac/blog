@@ -29,15 +29,15 @@ class ArticleRepository
         $articulos = [];
         if (!empty($query)) {
             $q = "SELECT * FROM articles WHERE text LIKE '%" . $query . "%' OR title LIKE '%" . $query . "%' ";
-            $q .= ($order == 3) ? ' ORDER BY title, date '.$sortOrder : (($order == 2) ? ' ORDER BY title '.$sortOrder : (($order == 1) ? ' ORDER BY date '.$sortOrder : ''));
+            $q .= ($order == 3) ? ' ORDER BY title ' . $sortOrder . ' , date ' : (($order == 2) ? ' ORDER BY title ' : (($order == 1) ? ' ORDER BY date ' : ''));
+            $q .= ($order != 0) ? ' ' . $sortOrder : '';
         } else {
-            $q = "SELECT * FROM articles";
+            $q = "SELECT * FROM articles ORDER BY id";
         }
         if ($pagina > 0) {
             $offset = -2 + 2 * $pagina;
-            $q .= ' LIMIT 2 OFFSET '.$offset;
+            $q .= ' LIMIT 2 OFFSET ' . $offset;
         }
-
         $result = $bd->query($q);
         while ($datos = $result->fetch_assoc()) {
             $articulos[] = new Article($datos);
@@ -57,7 +57,6 @@ class ArticleRepository
         $result = $bd->query($q);
         $datos = $result->fetch_array();
         $numArticulos = $datos[0];
-        
         return $numArticulos;
     }
 }

@@ -19,18 +19,13 @@
                 foreach($users as $user) {
                     echo 'Usuario: '.$user->getName(). ' - Rol actual:'.$user->getRol();
                     ?>
-                        <!-- <form action="index.php?c=user" method="POST" style="display:inline">
-                            <input type="number" name="nuevoRol" max="2" min="0" value="<?php //echo $user->getRol();?>"/>
-                            <input type="hidden" name="idUser" value="<?php //echo $user->getId();?>">
-                            <input type="submit" name="newRol" value="Cambiar"/>
-                        </form><br> -->
                         <form action="index.php?c=admin" method="POST" style="display:inline">
                             <select name="newRol">
                                 <option value=0 <?php echo ($user->getRol()==0)?'SELECTED':''?>>Baneado</option>
                                 <option value=1 <?php echo ($user->getRol()==1)?'SELECTED':''?>>Registrado</option>
                                 <option value=2 <?php echo ($user->getRol()==2)?'SELECTED':''?>>Admin</option>
                             </select>
-                            <input type="hidden" name="idUser" value="<?php echo $user->getId();?>">
+                            <input type="hidden" name="idUser" <?php echo 'value="'.$user->getId().'"';?>>
                             <input type="submit" value="Cambiar"/>
                         </form><br>
                     <?php

@@ -3,7 +3,6 @@
 /* ------------------ métodos para trabajar con comentarios ----------------- */
 class CommentRepository
 {
-
     public static function getComments()
     {
         $bd = Conectar::conexion();
@@ -106,30 +105,5 @@ class CommentRepository
         $bd = Conectar::conexion();
         $q = "UPDATE comments SET text = '" . $com->getText() . "', date = '" . $com->getDate() . "' WHERE id = " . $com->getId();
         $result = $bd->query($q);
-    }
-
-    public static function imprimeComentarios($idArticulo, $comments, $nivel = 0)
-    {
-        foreach ($comments as $comentario) {
-            echo '<tr><td>&nbsp;</td>';
-            echo '<td style="font-size:.7em">En ' . $comentario->getDate() . '</td><td>'
-                . str_repeat("&nbsp;|&nbsp;", $nivel) . ''
-                . $comentario->getUser()->getName() . ' comentó:</td></tr>';
-            echo '<tr><td>&nbsp;</td><td></td>';
-            echo '<td colspan=3>'
-                . str_repeat("&nbsp;|&nbsp;", $nivel) . ''
-                . $comentario->getText() . '</td><td>'
-                . (($_SESSION['user']->getRol() > 0) ? "<a href='index.php?c=comment&comentar=" . $idArticulo .
-                    "&subC=" . $comentario->getId() .
-                    "'>comentar</a>" : '') . '&nbsp;' . (($_SESSION['user']->getId() == $comentario->getIdUser()) ?
-                    "<a href='index.php?c=comment&modificar=" . $comentario->getId() .
-                    "'>M</a>&nbsp;<a href='index.php?c=comment&borrar=" . $comentario->getId() .
-                    "'>X</a>" : '') . '</td>';
-            echo '</tr>';
-            $responses = $comentario->getResponses();
-            if (!empty($responses)) {
-                CommentRepository::imprimeComentarios($idArticulo, $responses, $nivel + 1);
-            }
-        }
     }
 }

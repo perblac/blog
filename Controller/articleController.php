@@ -2,6 +2,7 @@
 /* -------------------------------------------------------------------------- */
 /*                         control sobre los artículos                        */
 /* -------------------------------------------------------------------------- */
+
 if (isset($_GET['nuevo']) && isset($_SESSION['user']) && $_SESSION['user']->getRol() > 1) {
     include("View/newArticleView.phtml");
     die;
