@@ -17,6 +17,8 @@ session_start();
 if (!empty($_GET['c'])) {
     //TODO: controlar que 'c' es válido
     require("Controller/".$_GET['c']."Controller.php");
+} else {
+    require("Controller/userController.php");
 }
 
 // usar modelos
